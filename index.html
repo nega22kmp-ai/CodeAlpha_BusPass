@@ -1,305 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bus Pass System</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f0f4f8;
-            color: #243047;
-        }
-
-        header {
-            background: #123b67;
-            color: white;
-            padding: 24px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0 0 8px;
-        }
-
-        nav {
-            background: #0c2949;
-            padding: 14px;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 12px;
-        }
-
-        .container {
-            max-width: 850px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            margin-bottom: 22px;
-            border-radius: 12px;
-            box-shadow: 0 4px 14px #00000012;
-        }
-
-        label {
-            display: block;
-            margin-top: 14px;
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 7px;
-            border: 1px solid #ccd4df;
-            border-radius: 6px;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 12px 20px;
-            background: #1769aa;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #0c4778;
-        }
-
-        #pass {
-            display: none;
-            border: 2px solid #1769aa;
-        }
-
-        .status {
-            color: #167044;
-            font-weight: bold;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #5a6575;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 12px;
-            }
-
-            .card {
-                padding: 18px;
-            }
-        }
-
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-
-            #pass, #pass * {
-                visibility: visible;
-            }
-
-            #pass {
-                display: block !important;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                box-shadow: none;
-            }
-
-            #pass button {
-                display: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Bus Pass System</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f0f4f8;color:#243047}
+header{background:#123b67;color:white;padding:24px;text-align:center}
+nav{background:#0c2949;padding:14px;text-align:center}
+nav a{color:white;text-decoration:none;margin:0 12px}
+.container{max-width:850px;margin:30px auto;padding:20px}
+.card{background:white;padding:25px;margin-bottom:22px;border-radius:12px;box-shadow:0 4px 14px #00000012}
+label{display:block;margin-top:14px;font-weight:bold}
+input,select{width:100%;padding:12px;margin-top:7px;border:1px solid #ccd4df;border-radius:6px}
+button{margin-top:20px;padding:12px 20px;background:#1769aa;color:white;border:0;border-radius:6px;cursor:pointer}
+#pass{display:none;border:2px solid #1769aa}
+.status{color:#167044;font-weight:bold}
+#saveStatus{overflow-wrap:anywhere}
+footer{text-align:center;padding:20px;color:#5a6575}
+@media(max-width:600px){.container{padding:12px}.card{padding:18px}}
+@media print{body *{visibility:hidden}#pass,#pass *{visibility:visible}#pass{display:block!important;position:absolute;top:0;left:0;width:100%;box-shadow:none}#pass button{display:none}}
+</style>
 </head>
-
 <body>
-
 <header>
-    <h1>Smart Bus Pass System</h1>
-    <p>Easy, convenient and digital bus pass management</p>
+<h1>Smart Bus Pass System</h1>
+<p>Easy, convenient and digital bus pass management</p>
 </header>
-
 <nav>
-    <a href="#apply">Apply for Pass</a>
-    <a href="#pass">My Bus Pass</a>
+<a href="#apply">Apply for Pass</a>
+<a href="#pass">My Bus Pass</a>
 </nav>
 
 <div class="container">
+<section class="card">
+  <h2>Firebase Sign In</h2>
+  <label for="loginEmail">Email</label>
+  <input id="loginEmail" type="email"
+         placeholder="Enter your registered email" required>
 
-    <section class="card" id="apply">
-        <h2>Apply for a Bus Pass</h2>
-        <p>Enter your details and select your travel route.</p>
+  <label for="loginPassword">Password</label>
+  <input id="loginPassword" type="password"
+         placeholder="Enter your password" required>
 
-        <form id="busForm">
+  <button type="button" id="loginButton">Sign In</button>
+  <p id="loginStatus">Please sign in to save bus passes.</p>
+</section>
+<section class="card" id="apply">
+<h2>Apply for a Bus Pass</h2>
+<p>Enter your details and select your travel route.</p>
+<form id="busForm">
+<label for="studentName">Full Name</label>
+<input id="studentName" type="text" placeholder="Enter your name" required>
 
-            <label for="studentName">Full Name</label>
-            <input
-                id="studentName"
-                type="text"
-                placeholder="Enter your name"
-                required
-            >
+<label for="studentId">Student ID</label>
+<input id="studentId" type="text" placeholder="Enter your student ID" required>
 
-            <label for="studentId">Student ID</label>
-            <input
-                id="studentId"
-                type="text"
-                placeholder="Enter your student ID"
-                required
-            >
+<label for="route">Bus Route</label>
+<select id="route" required>
+<option value="">Select a route</option>
+<option value="Pollachi - Coimbatore" data-price="800">Pollachi - Coimbatore (₹800 per month)</option>
+<option value="Pollachi - Udumalpet" data-price="500">Pollachi - Udumalpet (₹500 per month)</option>
+<option value="Pollachi - Tiruppur" data-price="1000">Pollachi - Tiruppur (₹1000 per month)</option>
+</select>
 
-            <label for="route">Bus Route</label>
-            <select id="route" required>
-                <option value="">Select a route</option>
-                <option value="Pollachi - Coimbatore" data-price="800">
-                    Pollachi - Coimbatore (₹800 per month)
-                </option>
-                <option value="Pollachi - Udumalpet" data-price="500">
-                    Pollachi - Udumalpet (₹500 per month)
-                </option>
-                <option value="Pollachi - Tiruppur" data-price="1000">
-                    Pollachi - Tiruppur (₹1000 per month)
-                </option>
-            </select>
+<label for="duration">Pass Duration</label>
+<select id="duration" required>
+<option value="1">1 Month</option>
+<option value="3">3 Months</option>
+</select>
+<button type="submit">Generate Bus Pass</button>
+</form>
+<p id="saveStatus" role="status"></p>
+</section>
 
-            <label for="duration">Pass Duration</label>
-            <select id="duration" required>
-                <option value="1">1 Month</option>
-                <option value="3">3 Months</option>
-            </select>
-
-            <button type="submit">Generate Bus Pass</button>
-
-        </form>
-    </section>
-
-    <section class="card" id="pass">
-        <h2>My Digital Bus Pass</h2>
-
-        <p><strong>Pass Number:</strong>
-            <span id="passNo"></span>
-        </p>
-
-        <p><strong>Name:</strong>
-            <span id="passName"></span>
-        </p>
-
-        <p><strong>Student ID:</strong>
-            <span id="passId"></span>
-        </p>
-
-        <p><strong>Route:</strong>
-            <span id="passRoute"></span>
-        </p>
-
-        <p><strong>Duration:</strong>
-            <span id="passDuration"></span>
-        </p>
-
-        <p><strong>Amount:</strong>
-            ₹<span id="passPrice"></span>
-        </p>
-
-        <p><strong>Valid From:</strong>
-            <span id="passStart"></span>
-        </p>
-
-        <p><strong>Valid Until:</strong>
-            <span id="passExpiry"></span>
-        </p>
-
-        <p class="status">
-            DEMO PASS — NOT VALID FOR ACTUAL TRAVEL
-        </p>
-
-        <button type="button" onclick="window.print()">
-            Print Bus Pass
-        </button>
-    </section>
-
+<section class="card" id="pass">
+<h2>My Digital Bus Pass</h2>
+<p><strong>Pass Number:</strong> <span id="passNo"></span></p>
+<p><strong>Name:</strong> <span id="passName"></span></p>
+<p><strong>Student ID:</strong> <span id="passId"></span></p>
+<p><strong>Route:</strong> <span id="passRoute"></span></p>
+<p><strong>Duration:</strong> <span id="passDuration"></span></p>
+<p><strong>Amount:</strong> ₹<span id="passPrice"></span></p>
+<p><strong>Valid From:</strong> <span id="passStart"></span></p>
+<p><strong>Valid Until:</strong> <span id="passExpiry"></span></p>
+<p class="status">DEMO PASS — NOT VALID FOR ACTUAL TRAVEL</p>
+<button type="button" onclick="window.print()">Print Bus Pass</button>
+</section>
 </div>
 
-<footer>
-    <p>Smart Bus Pass System | CodeAlpha Cloud Computing Project</p>
-</footer>
+<footer><p>Smart Bus Pass System | CodeAlpha Cloud Computing Project</p></footer>
 
-<script>
-    const busForm = document.getElementById("busForm");
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore, collection, addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-    busForm.addEventListener("submit", function(event) {
-        event.preventDefault();
+const firebaseConfig = {
+  apiKey: "AIzaSyDX6ppIQeUdA0qoA6zP4rn4AmTKuICFBuk",
+  authDomain: "codealpha-buspass.firebaseapp.com",
+  projectId: "codealpha-buspass",
+  storageBucket: "codealpha-buspass.firebasestorage.app",
+  messagingSenderId: "1034174686670",
+  appId: "1:1034174686670:web:0a180fab32438aca2e779f"
+};
 
-        const name = document.getElementById("studentName").value.trim();
-        const studentId = document.getElementById("studentId").value.trim();
-        const routeSelect = document.getElementById("route");
-        const route = routeSelect.value;
-        const duration = Number(
-            document.getElementById("duration").value
-        );
+let db;
+let auth;
+let firebaseReady = false;
 
-        const selectedOption =
-            routeSelect.options[routeSelect.selectedIndex];
+try {
+  const app = initializeApp(firebaseConfig);
+ auth = getAuth(app);
+  db = getFirestore(app);
+  firebaseReady = true;
+  console.log("Firebase initialized.");
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+}
+document.getElementById("loginButton").addEventListener("click", async () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const status = document.getElementById("loginStatus");
 
-        const monthlyPrice = Number(selectedOption.dataset.price);
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    status.textContent = "Signed in successfully!";
+  } catch (error) {
+    status.textContent = "Sign-in failed: " + error.message;
+  }
+});
+const busForm = document.getElementById("busForm");
+const saveStatus = document.getElementById("saveStatus");
 
-        if (!name || !studentId || !route || !monthlyPrice) {
-            alert("Please complete all fields and select a route.");
-            return;
-        }
+busForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
 
-        const startDate = new Date();
-        const expiryDate = new Date(startDate);
+  const name = document.getElementById("studentName").value.trim();
+  const studentId = document.getElementById("studentId").value.trim();
+  const routeSelect = document.getElementById("route");
+  const route = routeSelect.value;
+  const duration = Number(document.getElementById("duration").value);
+  const selectedOption = routeSelect.options[routeSelect.selectedIndex];
+  const monthlyPrice = Number(selectedOption.dataset.price);
 
-        expiryDate.setMonth(expiryDate.getMonth() + duration);
+  if (!name || !studentId || !route || !monthlyPrice) {
+    alert("Please complete all fields and select a route.");
+    return;
+  }
 
-        const passNumber =
-            "DEMO-" + Date.now().toString().slice(-8);
+  const startDate = new Date();
+  const expiryDate = new Date(startDate);
+  expiryDate.setMonth(expiryDate.getMonth() + duration);
 
-        document.getElementById("passNo").textContent = passNumber;
-        document.getElementById("passName").textContent = name;
-        document.getElementById("passId").textContent = studentId;
-        document.getElementById("passRoute").textContent = route;
+  const passNumber = "DEMO-" + Date.now().toString().slice(-8);
+  const amount = monthlyPrice * duration;
 
-        document.getElementById("passDuration").textContent =
-            duration + (duration === 1 ? " Month" : " Months");
+  document.getElementById("passNo").textContent = passNumber;
+  document.getElementById("passName").textContent = name;
+  document.getElementById("passId").textContent = studentId;
+  document.getElementById("passRoute").textContent = route;
+  document.getElementById("passDuration").textContent =
+    duration + (duration === 1 ? " Month" : " Months");
+  document.getElementById("passPrice").textContent =
+    amount.toLocaleString("en-IN");
+  document.getElementById("passStart").textContent =
+    startDate.toLocaleDateString("en-IN");
+  document.getElementById("passExpiry").textContent =
+    expiryDate.toLocaleDateString("en-IN");
 
-        document.getElementById("passPrice").textContent =
-            (monthlyPrice * duration).toLocaleString("en-IN");
+  document.getElementById("pass").style.display = "block";
+  document.getElementById("pass").scrollIntoView({behavior:"smooth"});
 
-        document.getElementById("passStart").textContent =
-            startDate.toLocaleDateString("en-IN");
+  if (!firebaseReady) {
+    saveStatus.textContent = "Pass generated as a demo, but Firebase did not initialize. Check the configuration and console.";
+    return;
+  }
 
-        document.getElementById("passExpiry").textContent =
-            expiryDate.toLocaleDateString("en-IN");
+  saveStatus.textContent = "Saving pass to Firebase...";
 
-        document.getElementById("pass").style.display = "block";
-
-        document.getElementById("pass").scrollIntoView({
-            behavior: "smooth"
-        });
+  try {
+    await addDoc(collection(db, "busPasses"), {
+      passNumber: passNumber,
+      studentName: name,
+      studentId: studentId,
+      route: route,
+      durationMonths: duration,
+      amount: amount,
+      validFrom: startDate.toISOString(),
+      validUntil: expiryDate.toISOString(),
+      createdAt: serverTimestamp()
     });
-</script>
 
+    saveStatus.textContent = "Demo pass generated and saved to Firebase Firestore.";
+  } catch (error) {
+    console.error("Firestore save error:", error);
+    saveStatus.textContent =
+      "Demo pass generated, but saving failed. Check Firestore setup and security rules.";
+  }
+});
+</script>
 </body>
 </html>
